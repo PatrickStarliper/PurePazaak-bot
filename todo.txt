@@ -1,6 +1,16 @@
 commands:
-!game = run pazaak game, only admin role runs
+!start = run pazaak game, only admin role runs
+!cancel = stops game, resets money etc
+!stop = stops and saves game
 !reset = reset array of players
-!play = add player to game
 !buyin 5 = bet this ammount of money
+!skip = skips current game of 2 players
+
 !clear = delete all messages in channel
+!join = adds player to list
+!commands = shows member commands
+!acomms = shows admin commands
+
+no permission function
+bulk delete function
+

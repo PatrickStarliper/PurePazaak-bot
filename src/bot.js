@@ -9,6 +9,17 @@ const PREFIX = '!';
 // let playerList = [];
 let playerList = ['player01', 'player02', 'player04'];
 
+function startGame(message) {
+    let playerOne = Math.floor(Math.random() * playerList.length);
+    let playerTwo;
+    if (playerOne === playerList.length) {
+        playerTwo = playerList[0];
+    } else {
+        playerTwo = playerOne + 1;
+    }
+    message.channel.send(`${playerList[playerOne]} and ${playerList[playerTwo]} are playing.`);
+}
+
 client.once('ready', () => {
     //console.log('Successfully logged into client.');
     console.log(`${client.user.username} logged into client.`);
@@ -30,10 +41,16 @@ client.on('message', async (message) => {
                     deleted = await message.channel.bulkDelete(99);
                 } while (deleted.size != 0);
             }
+            else if (command === 'acomms') {
+                message.channel.send("```Admin Commands: \n\nclear ```");
+            }
+            else if (command === 'start') {
+                startGame(message);
+            }
         }
         else {
             message.reply('No permission')
-                .then(() => console.log(`${message.author.tag} tried !clear`))
+                .then(() => console.log(`${message.author.tag} tried ${message.content}`))
                 .catch(console.error);
         }
 
@@ -56,6 +73,9 @@ client.on('message', async (message) => {
                 console.log(`${message.author.tag} tried to join again.`);
                 message.reply('Already added.');
             }
+        }
+        else if (command === 'commands') {
+            message.channel.send("```Player Commands: \n\njoin \nplayers ```");
         }
     }
 });
