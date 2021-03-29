@@ -5,11 +5,12 @@ commands:
 !reset = reset array of players
 !buyin 5 = bet this ammount of money
 !skip = skips current game of 2 players
+!remove name = removes player "name" from game
 
 !clear = delete all messages in channel
 !join = adds player to list
 !commands = shows member commands
-!acomms = shows admin commands
+!acommands = shows admin commands
 
 no permission function
 bulk delete function
