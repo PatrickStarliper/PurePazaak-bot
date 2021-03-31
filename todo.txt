@@ -1,7 +1,7 @@
 commands:
 !start = run pazaak game, only admin role runs
-!cancel = stops game, resets money etc
-!stop = stops and saves game
+!cancelgame = stops game, resets money etc
+!stopgame = stops and saves game
 !reset = reset array of players
 !buyin 5 = bet this ammount of money
 !skip = skips current game of 2 players
@@ -15,3 +15,4 @@ commands:
 no permission function
 bulk delete function
 
+plan out after the randoms have been selected

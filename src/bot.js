@@ -1,35 +1,38 @@
 const dotenv = require('dotenv');
 dotenv.config();
 //console.log(process.env.TOKEN);
-
+const Player = require('./player');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const PREFIX = '!';
 
 let playerList = [];
 
-class Player {
-    constructor(username, money, currentCount, currentCards, roundWins) {
-        this.name = username;
-        this.money = money;
-        this.currentCount = currentCount;
-        this.currentCards = currentCards;
-        this.roundWins = roundWins;
-    }
-
-    getTag() { return this.name; }
-    setTag(username) { this.name = username; }
+function startGame(message) {
+    shuffle(playerList);
+    //console.log(playerList);
+    let playerOne = playerList[0];
+    let playerTwo = playerList[1];
+    console.log(playerOne.getTag(), playerTwo.getTag());
 }
 
-function startGame(message) {
-    let playerOne = Math.floor(Math.random() * playerList.length);
-    let playerTwo;
-    if (playerOne === playerList.length) {
-        playerTwo = playerList[0];
-    } else {
-        playerTwo = playerOne + 1;
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
     }
-    message.channel.send(`${playerList[playerOne]} and ${playerList[playerTwo]} are playing.`);
+
+    return array;
 }
 
 function checkForUsername(players, username) {
@@ -72,7 +75,7 @@ client.on('message', async (message) => {
             if (!checkForUsername(playerList, message.author.username)) {
                 playerList.push(new Player(message.author.username, 0, 0, [], 0));
                 console.log(`${playerList.length} player(s).`);
-                message.reply(`${message.author.username} has been added.`)
+                message.reply(`You have been added.`)
                     .then(() => console.log(`${message.author.tag} tried ${message.content}`))
                     .catch(console.error);
             }
@@ -105,9 +108,17 @@ client.on('message', async (message) => {
                 do {
                     deleted = await message.channel.bulkDelete(99);
                 } while (deleted.size != 0);
+                console.log(`${message.channel.name} channel has been cleared.`);
             }
             else if (command === 'acommands') {
                 message.channel.send("```Admin Commands: \n\nclear\nstart ```");
+            }
+            else if (command === 'itt') { // testing command
+                playerList.push(new Player('PAT', 0, 0, [], 0));
+                playerList.push(new Player('m310logi', 0, 0, [], 0));
+                playerList.push(new Player('Player3', 0, 0, [], 0));
+                playerList.push(new Player('Player4', 0, 0, [], 0));
+                message.channel.send('test add (4).');
             }
         }
         // else {
@@ -117,9 +128,5 @@ client.on('message', async (message) => {
         // }
     }
 });
-
-
-
-
 
 client.login(process.env.TOKEN);
