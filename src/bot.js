@@ -7,13 +7,19 @@ const client = new Discord.Client();
 const PREFIX = '!';
 
 let playerList = [];
+let playerOne = null;
+let playerTwo = null;
+let gameOver = false;
 
-function startGame(message) {
-    shuffle(playerList);
-    //console.log(playerList);
-    let playerOne = playerList[0];
-    let playerTwo = playerList[1];
-    console.log(playerOne.getTag(), playerTwo.getTag());
+function pickRandomCards() {
+
+    // picks four random cards for the player from a list of allowed numbered cards
+    let cards = ['-6', '-5', '-4', '-3', '-2', '-1', '+1', '+2', '+3', '+4', '+5', '+6'];
+    shuffle(cards);
+    console.log(cards);
+    console.log(`pickRandomCards: ${cards.slice(0, 4)}`);
+
+    return cards.slice(0, 4);
 }
 
 function shuffle(array) {
@@ -35,7 +41,15 @@ function shuffle(array) {
     return array;
 }
 
+function getRandomNumber(maxNumber) {
+
+    // get random number from 1-10 for dealer
+    return Math.floor(Math.random() * maxNumber + 1);
+}
+
 function checkForUsername(players, username) {
+
+    // check if player has been added to the player list
     for (let i = 0; i < players.length; i++) {
         if (players[i].getTag() === username) {
             return true;
@@ -58,7 +72,24 @@ client.on('message', async (message) => {
             .split(/\s+/);
 
         // member commands
-        if (command === 'players') {
+        if (command === 'start') {
+            // pick two random players from the list of added players
+            shuffle(playerList);
+            playerOne = playerList[0];
+            playerTwo = playerList[1];
+            console.log(playerOne.getTag(), playerTwo.getTag());
+
+            // give the two players random playing cards, until picking is added
+            playerOne.setPlayingCards(pickRandomCards());
+            playerTwo.setPlayingCards(pickRandomCards());
+            console.log(playerOne.getPlayingCards(), playerTwo.getPlayingCards());
+
+            // game and player input starts here
+            if (gameOver === true) {
+                console.log('Game over!');
+            }
+        }
+        else if (command === 'players') {
             if (playerList.length != 0) {
                 let names = [];
                 for (let i = 0; i < playerList.length; i++) {
@@ -100,10 +131,7 @@ client.on('message', async (message) => {
 
         // admin only commands
         if (message.member.roles.cache.find(r => r.name === 'Hutt')) { // Hutt = admin
-            if (command === 'start') {
-                startGame(message);
-            }
-            else if (command === 'clear') {
+            if (command === 'clear') {
                 let deleted;
                 do {
                     deleted = await message.channel.bulkDelete(99);
@@ -113,20 +141,32 @@ client.on('message', async (message) => {
             else if (command === 'acommands') {
                 message.channel.send("```Admin Commands: \n\nclear\nstart ```");
             }
-            else if (command === 'itt') { // testing command
+            else if (command === 'test') { // testing command
                 playerList.push(new Player('PAT', 0, 0, [], 0));
                 playerList.push(new Player('m310logi', 0, 0, [], 0));
                 playerList.push(new Player('Player3', 0, 0, [], 0));
                 playerList.push(new Player('Player4', 0, 0, [], 0));
                 message.channel.send('test add (4).');
+                console.log(playerList);
+            }
+            else if (command === 'test2') {
+                let x = null;
+                console.log(x);
+                x = new Player('tryguy', 0, 0, [], 0);
+                console.log(x);
             }
         }
-        // else {
-        //     message.reply('No permission')
-        //         .then(() => console.log(`${message.author.tag} tried ${message.content}`))
-        //         .catch(console.error);
-        // }
     }
+    if (playerOne != null) {
+        if (message.author.username === playerOne.getTag()) {
+            console.log(message.author.username);
+        }
+        else if (message.author.username === playerTwo.getTag()) {
+            console.log('ye');
+        }
+    }
+
+    console.log(message.author);
 });
 
 client.login(process.env.TOKEN);
