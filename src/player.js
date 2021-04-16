@@ -14,4 +14,13 @@ module.exports = class Player {
     setPlayingCards(cards) { this.playingCards = cards; }
     getCurrentCount() { return this.currentCount; }
     setCurrentCount(number) { this.currentCount = number; }
+
+    deleteCard(card) {
+        for (let i = 0; i < this.playingCards.length; i++) {
+            if (this.playingCards[i] === card) {
+                this.playingCards.splice(i, 1);
+            }
+        }
+        // change to return card and remove from array, look up
+    }
 };

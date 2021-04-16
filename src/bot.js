@@ -126,7 +126,7 @@ client.on('message', async (message) => {
             }
         }
         else if (command === 'commands') {
-            message.channel.send("```Player Commands: \n\njoin \nplayers\nremove ```");
+            message.channel.send("```Player Commands: \n\njoin \nplayers \nremove \nuse ```");
         }
 
         // admin only commands
@@ -144,6 +144,12 @@ client.on('message', async (message) => {
             else if (command === 'test') { // testing command
                 playerList.push(new Player('PAT', 0, 0, [], 0));
                 playerList.push(new Player('m310logi', 0, 0, [], 0));
+                message.channel.send('test add (2).');
+                console.log(playerList);
+            }
+            else if (command === 'testmore') { // testing command
+                playerList.push(new Player('PAT', 0, 0, [], 0));
+                playerList.push(new Player('m310logi', 0, 0, [], 0));
                 playerList.push(new Player('Player3', 0, 0, [], 0));
                 playerList.push(new Player('Player4', 0, 0, [], 0));
                 message.channel.send('test add (4).');
@@ -156,17 +162,27 @@ client.on('message', async (message) => {
                 console.log(x);
             }
         }
-    }
-    if (playerOne != null) {
-        if (message.author.username === playerOne.getTag()) {
-            console.log(message.author.username);
-        }
-        else if (message.author.username === playerTwo.getTag()) {
-            console.log('ye');
+
+        if (playerOne != null) {
+            if (message.author.username === playerOne.getTag()) {
+                console.log(message.author.username);
+                console.log(command, args);
+                console.log(message.content);
+                if (command === 'use') {
+                    console.log(`Card to be removed: ${args[0]}`);
+                    playerOne.deleteCard(args[0]);
+                }
+            }
+            else if (message.author.username === playerTwo.getTag()) {
+                console.log('2nd player:')
+                console.log(message.author.username);
+                console.log(command, args);
+                console.log(message.content);
+            }
         }
     }
 
-    console.log(message.author);
+    //console.log(message.author);
 });
 
 client.login(process.env.TOKEN);
